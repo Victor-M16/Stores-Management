@@ -7,7 +7,15 @@ class ProcurementChoiceSerializer(serializers.ModelSerializer):
         model = ProcurementChoice
         fields = '__all__'
 
+class RFQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RFQ
+        fields = '__all__'
 
+class RFQbidSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RFQbid
+        fields = '__all__'
 
 class TenderNoticeSerializer(serializers.ModelSerializer):
     class Meta:
