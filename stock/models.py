@@ -143,7 +143,7 @@ class Stock(models.Model):
         verbose_name=_("inventory stock check date"),
         help_text=_("format: Y-m-d H:M:S, null-true, blank-true"),
     )
-    units = models.IntegerField(
+    total_stock = models.IntegerField(
         default=0,
         unique=False,
         null=False,
