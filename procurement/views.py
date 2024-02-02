@@ -17,7 +17,7 @@ from django.utils import timezone
 
 from .models import RFQ, RFQbid
 from .forms import RFQbidForm
-
+from stock.models import *
 
 
 def open_rfqs(request):
