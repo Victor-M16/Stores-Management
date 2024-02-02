@@ -4,6 +4,25 @@ from rest_framework import generics
 from procurement.models import *
 from .serializer import *
 
+from rest_framework import generics
+from rest_framework.response import Response
+from django.utils import timezone
+
+class CreateRFQAPIView(generics.CreateAPIView):
+    queryset = RFQ.objects.all()
+    serializer_class = RFQSerializer
+
+
+class OpenRFQsAPIView(generics.ListAPIView):
+    queryset = RFQ.objects.filter(closing_date__gte=timezone.now()) | RFQ.objects.filter(closing_date__isnull=True)
+    serializer_class = RFQSerializer
+
+
+class ApplyToRFQAPIView(generics.CreateAPIView):
+    queryset = RFQbid.objects.all()
+    serializer_class = RFQbidSerializer
+
+
 
 class ProcurementChoiceView(generics.ListAPIView):
     queryset = ProcurementChoice.objects.all()

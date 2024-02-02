@@ -1,0 +1,29 @@
+Inventory Metrics for Product P1(Sugar):
+Optimal Order Quantity: 190
+Reorder Point: 189.2
+Safety Stock: 91.19999999999999
+Total Cost: 201900.0
+Remaining Inventory Stock: 9510
+
+Inventory Metrics for Product P2(Phone):
+Optimal Order Quantity: 186
+Reorder Point: 185.8
+Safety Stock: 86.00000000000001
+Total Cost: 81860.0
+Remaining Inventory Stock: 3501
+
+Inventory Metrics for Product P3(Medicine):
+Optimal Order Quantity: 137
+Reorder Point: 136.2
+Safety Stock: 66.39999999999999
+Total Cost: 141370.0
+Remaining Inventory Stock: 6651
+
+
+
+        list_id ={
+            'A':'772559868266',
+            'B':'566540807600',
+            'c':'357685595552',
+            'D':'838936425955',
+        }
