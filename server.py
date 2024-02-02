@@ -155,9 +155,37 @@ try:
         # Replace this logic with your specific requirements.
         # For demonstration purposes, let's assume the data is an ID:
         received_id = data.decode('utf-8')
+
+
+
         filtered_product = ProductInventory.objects.get(sku=received_id)
         print("Filtered Product:", filtered_product)
-        #filtered_product.update(initial_stock=50)
+
+
+        try:
+            # Retrieve or create the associated Stock object
+            filtered_stock, created = Stock.objects.get_or_create(product_inventory=filtered_product)
+            print(filtered_stock.total_stock)
+
+            # Adjust total_stock based on the condition
+            if filtered_stock.total_stock > 10:
+                filtered_stock.total_stock -= 10
+                filtered_stock.save()
+            else:
+                print(f"You are out of stock for {filtered_product}.")
+
+            # Save the changes to the Stock object
+                filtered_stock.save()
+
+
+        except ProductInventory.DoesNotExist:
+            print(f" {filtered_product} not found.")
+        except Stock.DoesNotExist:
+            print(f"Stock not found for {filtered_product}.")
+
+
+
+        #auto_rfq
         auto_rfq(received_id,filtered_product)
 
 

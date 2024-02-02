@@ -21,3 +21,7 @@ class ProductInventoryModelAdmin(admin.ModelAdmin):
     list_display = ['sku', 'upc']
     inlines = [StockInline]
 
+class StockAdmin(admin.ModelAdmin):
+    list_display = ('product_inventory', 'total_stock', 'units_out', 'last_checked')
+
+admin.site.register(Stock, StockAdmin)
