@@ -23,4 +23,5 @@ urlpatterns = [
     path('stock/', include('stock.urls', namespace='stock')),
     path('procurement/', include('procurement.urls', namespace='procurement')),
     path('api/', include('api.urls', namespace='api')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]

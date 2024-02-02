@@ -2,6 +2,11 @@ from rest_framework import serializers
 
 from .models import *
 
+class RFIDDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RFIDData
+        fields = ('uid',)
+
 class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:

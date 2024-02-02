@@ -1,0 +1,44 @@
+{% load static tailwind_tags %}
+{% tailwind_css %}
+<div id="data-table">
+    <table  class="w-full caption-bottom text-sm">
+        <thead class="[&amp;_tr]:border-b">
+            <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                <th class="h-12 px-4  align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">
+                Name
+                </th>
+                <th class="h-12 px-4  align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                SKU
+                </th>
+                <th class="h-12 px-4  align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                UPC
+                </th>
+                <th class="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 ">
+                Product Variant
+                </th>
+                <th class="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                Last Ordered
+                </th>
+                <th class="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 ">
+                Total Stock
+                </th>
+                <th class="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 ">
+                Units Out
+                </th>
+            </tr>
+        </thead>
+        <tbody class="[&amp;_tr:last-child]:border-0" >
+            {% for item in inventory %}
+            <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                <td class="p-4 text-center align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{{item.product.name}}</td>
+                <td class="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">{{item.sku}}</td>
+                <td class="p-4 align-middle text-center[&amp;:has([role=checkbox])]:pr-0">{{item.upc}}</td>
+                <td class="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">{{item.product_variant}}</td>
+                <td class="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0">{{item.last_ordered}}</td>
+                <td class="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0 ">{{item.product_inventory.total_stock}}</td>
+                <td class="p-4 align-middle text-center [&amp;:has([role=checkbox])]:pr-0 ">{{item.product_inventory.units_out}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
