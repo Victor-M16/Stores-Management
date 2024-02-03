@@ -41,9 +41,8 @@ class RFQ(models.Model):
     budget = models.FloatField(null=True)
     safety_stock = models.FloatField(null = True)
     publication_date = models.DateField(auto_now_add=True)
-    closing_date = models.DateField(null = True)
     is_approved = models.BooleanField(default = False)
-    is_active = models.BooleanField(default = False)
+    is_active = models.BooleanField(default = True)
 
  
 class RFQbid(models.Model):

@@ -17,7 +17,7 @@ class CreateRFQAPIView(generics.CreateAPIView):
 
 
 class OpenRFQsAPIView(generics.ListAPIView):
-    queryset = RFQ.objects.filter(closing_date__gte=timezone.now()) | RFQ.objects.filter(closing_date__isnull=True)
+    queryset = RFQ.objects.filter(is_active=True)
     serializer_class = RFQSerializer
 
 
