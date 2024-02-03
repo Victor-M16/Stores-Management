@@ -10,7 +10,11 @@ class ProcurementChoiceSerializer(serializers.ModelSerializer):
 
 class RFQSerializer(serializers.ModelSerializer):
 
-    product = ProductInventorySerializer()
+    url = serializers.HyperlinkedIdentityField(
+        view_name='api:rfq-single',
+        lookup_field='id',
+        )
+    product = ProductInventorySerializer(read_only=True)
 
     class Meta:
         model = RFQ

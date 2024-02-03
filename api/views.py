@@ -1,5 +1,9 @@
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 
 from procurement.models import *
 from .serializer import *
@@ -14,8 +18,8 @@ class CreateRFQAPIView(generics.CreateAPIView):
     serializer_class = RFQSerializer
 
 
-class OpenRFQsAPIView(generics.ListAPIView):
-    queryset = RFQ.objects.filter(closing_date__gte=timezone.now()) | RFQ.objects.filter(closing_date__isnull=True)
+class OpenRFQsAPIView(generics.ListCreateAPIView):
+    queryset = RFQ.objects.filter(is_active=True)  
     serializer_class = RFQSerializer
 
 
@@ -54,3 +58,26 @@ class PublicProcurementActView(generics.ListAPIView):
     queryset = PublicProcurementAct.objects.all()
     serializer_class = PublicProcurementActSerializer
 
+
+class RFQUpdateAPIView(APIView):
+    def patch(self, request, pk):
+        try:
+            rfq_instance = RFQ.objects.get(pk=pk)
+        except rfq_instance.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = RFQSerializer(rfq_instance, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class RFQSingleView(generics.RetrieveUpdateAPIView):
+    permission_classes = [AllowAny]
+    lookup_field = 'id'
+    serializer_class = RFQSerializer
+    queryset = RFQ.objects.all()
+
+    

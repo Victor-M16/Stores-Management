@@ -13,5 +13,8 @@ urlpatterns = [
 
     path('create_rfq/', views.CreateRFQAPIView.as_view(), name='create_rfq_api'),
     path('apply_to_rfq/', views.ApplyToRFQAPIView.as_view(), name='apply_to_rfq_api'),
+
     path('open_rfqs/', views.OpenRFQsAPIView.as_view(), name='open_rfqs_api'),
+    path('rfq-update/<int:pk>/', views.RFQUpdateAPIView.as_view(), name='rfq-update'),
+    path('rfq-single/<int:id>/', views.RFQSingleView.as_view(), name='rfq-single'),
 ]

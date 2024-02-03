@@ -23,7 +23,8 @@ from procurement.models import *
 
 
 #add your django server's port here.
-host, port = '192.168.1.188', 8000
+host, port = '192.168.1.188', 8000 #Wongani
+#host, port = '192.168.1.152', 8000 #Victor
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host, port))
 s.listen()
@@ -116,7 +117,9 @@ def auto_rfq(rfid,product_to_rfq):
                 rfq = RFQ.objects.create(
                     product=product_to_rfq,
                     description='[RFQ Description]',
-                    quantity=rfq_metrics[rfid]['Optimal Order Quantity']
+                    quantity=rfq_metrics[rfid]['Optimal Order Quantity'],
+                    budget = rfq_metrics[rfid]['Total Cost'],
+                    safety_stock = rfq_metrics[rfid]['Safety Stock'],
                 )
 
 

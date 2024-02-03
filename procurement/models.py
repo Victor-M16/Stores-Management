@@ -38,10 +38,12 @@ class RFQ(models.Model):
     product = models.ForeignKey(ProductInventory, on_delete=models.CASCADE, null = True)
     description = models.TextField()
     quantity = models.IntegerField(default = 0)
+    budget = models.FloatField(null=True)
+    safety_stock =models.FloatField(null=True)
     publication_date = models.DateField(auto_now_add=True)
-    closing_date = models.DateField(null = True)
+    # closing_date = models.DateField(null = True, blank=True)
     is_approved = models.BooleanField(default = False)
-    is_active = models.BooleanField(default = False)
+    is_active = models.BooleanField(default = True)
 
  
 class RFQbid(models.Model):
