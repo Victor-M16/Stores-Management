@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from procurement.models import *
+from stock.serializers import ProductInventorySerializer
 
 class ProcurementChoiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,6 +9,9 @@ class ProcurementChoiceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class RFQSerializer(serializers.ModelSerializer):
+
+    product = ProductInventorySerializer()
+
     class Meta:
         model = RFQ
         fields = '__all__'

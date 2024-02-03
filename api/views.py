@@ -8,6 +8,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from django.utils import timezone
 
+
 class CreateRFQAPIView(generics.CreateAPIView):
     queryset = RFQ.objects.all()
     serializer_class = RFQSerializer

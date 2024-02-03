@@ -23,7 +23,7 @@ from procurement.models import *
 
 
 #add your django server's port here.
-host, port = '192.168.1.152', 8000
+host, port = '192.168.1.188', 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host, port))
 s.listen()
@@ -105,17 +105,16 @@ def auto_rfq(rfid,product_to_rfq):
             
         }
 
-        
 
         rfq_set = RFQ.objects.all()
 
         # Assuming 'rfid', 'product_to_rfq', 'stock_to_rfq', and 'rfq_metrics' are defined elsewhere
         if rfid == product_to_rfq.sku and stock_to_rfq.total_stock <= rfq_metrics[rfid]['Reorder Point']:
             # Check if an RFQ for the same product doesn't already exist
-            if not any(i.product == product_to_rfq.product for i in rfq_set):
+            if not any(i.product == product_to_rfq for i in rfq_set):
                 # Create an RFQ
                 rfq = RFQ.objects.create(
-                    product=product_to_rfq.product,
+                    product=product_to_rfq,
                     description='[RFQ Description]',
                     quantity=rfq_metrics[rfid]['Optimal Order Quantity']
                 )

@@ -14,16 +14,6 @@ class Product(models.Model):
     Product details table
     """
 
-    web_id = models.CharField(
-        max_length=50,
-        unique=True,
-        null=False,
-        blank=False,
-        editable=False,
-        default=uuid.uuid1(),
-        verbose_name=_("product website ID"),
-        help_text=_("format: required, unique"),
-    )
     name = models.CharField(
         max_length=255,
         unique=False,
