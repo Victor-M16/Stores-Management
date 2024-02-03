@@ -7,6 +7,8 @@ from .serializer import *
 from rest_framework import generics
 from rest_framework.response import Response
 from django.utils import timezone
+from rest_framework import status
+from rest_framework.views import APIView
 
 class CreateRFQAPIView(generics.CreateAPIView):
     queryset = RFQ.objects.all()
@@ -53,3 +55,34 @@ class PublicProcurementActView(generics.ListAPIView):
     queryset = PublicProcurementAct.objects.all()
     serializer_class = PublicProcurementActSerializer
 
+
+
+
+class InventoryMetricsView(APIView):
+    def post(self, request, *args, **kwargs):
+        inventory_metrics_data = request.data.get('inventory_metrics')
+
+        if inventory_metrics_data:
+            # Perform actions with the inventory metrics data
+            # For example, you can save it to a database
+            # Replace this part with your actual processing logic
+
+            return Response({'message': 'Inventory metrics data received and processed successfully.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid or missing inventory metrics data in the request.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+class ProductSkuDictView(APIView):
+    def get(self, request, *args, **kwargs):
+        # Fetch data to populate the product_sku_dict
+        # Replace this part with your actual logic to fetch and format data
+
+        fetched_data = {
+            '1': ['772559868266', 'Medicine'],
+            '2': ['566540807600', 'Fertilizer'],
+            '3': ['357685595552', 'Maize'],
+            # Add more data as needed
+        }
+
+        return Response({'product_sku_dict': fetched_data}, status=status.HTTP_200_OK)

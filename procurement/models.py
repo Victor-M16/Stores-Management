@@ -38,6 +38,8 @@ class RFQ(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null = True)
     description = models.TextField()
     quantity = models.IntegerField(default = 0)
+    budget = models.FloatField(null=True)
+    safety_stock = models.FloatField(null = True)
     publication_date = models.DateField(auto_now_add=True)
     closing_date = models.DateField(null = True)
     is_approved = models.BooleanField(default = False)

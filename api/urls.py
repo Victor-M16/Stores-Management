@@ -14,4 +14,9 @@ urlpatterns = [
     path('create_rfq/', views.CreateRFQAPIView.as_view(), name='create_rfq_api'),
     path('apply_to_rfq/', views.ApplyToRFQAPIView.as_view(), name='apply_to_rfq_api'),
     path('open_rfqs/', views.OpenRFQsAPIView.as_view(), name='open_rfqs_api'),
+
+
+    path('inventory_metrics/', views.InventoryMetricsView.as_view(), name='inventory_metrics'),
+    path('product_sku_dict/',views.ProductSkuDictView.as_view(), name='product-sku-dict-view'),
 ]
+

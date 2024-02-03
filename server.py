@@ -23,6 +23,7 @@ from procurement.models import *
 
 
 #add your django server's port here.
+#host, port = '192.168.1.188', 8000 #Wongani
 host, port = '192.168.1.152', 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host, port))
@@ -92,6 +93,8 @@ def auto_rfq(rfid,product_to_rfq):
     }
 
     rfq_optimum_order_quantity = rfq_metrics[rfid]['Optimal Order Quantity']
+    rfq_budget = rfq_metrics[rfid]['Total Cost']
+    rfq_saftey_stock = rfq_metrics[rfid]['Safty Stock']
 
     try:
         product_to_rfq = ProductInventory.objects.get(sku=rfid)
@@ -117,7 +120,10 @@ def auto_rfq(rfid,product_to_rfq):
                 rfq = RFQ.objects.create(
                     product=product_to_rfq.product,
                     description='[RFQ Description]',
-                    quantity=rfq_metrics[rfid]['Optimal Order Quantity']
+                    quantity=rfq_metrics[rfid]['Optimal Order Quantity'],
+                    budget = rfq_metrics[rfid]['Total Cost'],
+                    safety_stock = rfq_metrics[rfid]['Safty Stock'],
+
                 )
 
 
@@ -147,46 +153,53 @@ try:
         data = conn.recv(1024)
         if not data:
             break
-        print(f"Received: {data.decode('utf-8')}")
 
-        # Perform querying logic using the received data and existing queryset
-        # For example, if the received data is an ID, filter the queryset
-        # with that ID and do something with the result.
-        # Replace this logic with your specific requirements.
-        # For demonstration purposes, let's assume the data is an ID:
-        received_id = data.decode('utf-8')
-
-
-
-        filtered_product = ProductInventory.objects.get(sku=received_id)
-        print("Filtered Product:", filtered_product)
 
 
         try:
-            # Retrieve or create the associated Stock object
-            filtered_stock, created = Stock.objects.get_or_create(product_inventory=filtered_product)
-            print(filtered_stock.total_stock)
 
-            # Adjust total_stock based on the condition
-            if filtered_stock.total_stock > 10:
-                filtered_stock.total_stock -= 10
-                filtered_stock.save()
-            else:
-                print(f"You are out of stock for {filtered_product}.")
+            print(f"Received: {data.decode('utf-8')}")
 
-            # Save the changes to the Stock object
-                filtered_stock.save()
+            # Perform querying logic using the received data and existing queryset
+            # For example, if the received data is an ID, filter the queryset
+            # with that ID and do something with the result.
+            # Replace this logic with your specific requirements.
+            # For demonstration purposes, let's assume the data is an ID:
+            received_id = data.decode('utf-8')
+            filtered_product = ProductInventory.objects.get(sku=received_id)
+            print("Filtered Product:", filtered_product)
+
+            try:
+                # Retrieve or create the associated Stock object
+                filtered_stock, created = Stock.objects.get_or_create(product_inventory=filtered_product)
+                print(filtered_stock.total_stock)
+
+                # Adjust total_stock based on the condition
+                if filtered_stock.total_stock > 10:
+                    filtered_stock.total_stock -= 10
+                    filtered_stock.save()
+                else:
+                    print(f"You are out of stock for {filtered_product}.")
+
+                # Save the changes to the Stock object
+                    filtered_stock.save()
 
 
-        except ProductInventory.DoesNotExist:
-            print(f" {filtered_product} not found.")
-        except Stock.DoesNotExist:
-            print(f"Stock not found for {filtered_product}.")
+            except ProductInventory.DoesNotExist:
+                print(f" {filtered_product} not found.")
+            except Stock.DoesNotExist:
+                print(f"Stock not found for {filtered_product}.")
 
 
 
-        #auto_rfq
-        auto_rfq(received_id,filtered_product)
+            #auto_rfq
+            auto_rfq(received_id,filtered_product)
+
+
+        except:
+            print("It worked")
+            pass
+
 
 
 
