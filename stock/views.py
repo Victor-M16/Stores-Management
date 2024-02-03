@@ -1,14 +1,72 @@
+import json
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.csrf import csrf_exempt
+
+from channels.layers import get_channel_layer
+
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from asgiref.sync import async_to_sync
+
 from .models import *
 from .serializers import *
+# views.py
+
+
+from .models import ProductInventory, Stock
+
+# @csrf_exempt
+# def update_product_inventory(request, sku):
+#     if request.method == 'POST':
+#         data = json.loads(request.body.decode('utf-8'))
+
+#         # Assuming your request payload looks like {'total_stock': 50}
+#         new_total_stock = data.get('total_stock')
+
+#         if new_total_stock is not None:
+#             product_inventory = get_object_or_404(ProductInventory, sku=sku)
+#             stock_instance, created = Stock.objects.get_or_create(product_inventory=product_inventory)
+
+#             # Update the total_stock field
+#             stock_instance.total_stock = new_total_stock
+#             stock_instance.save()
+
+#             # Send real-time update to WebSocket consumers
+#             channel_layer = get_channel_layer()
+#             async_to_sync(channel_layer.group_send)(
+#                 f"product_inventory_{sku}",
+#                 {
+#                     'type': 'product_inventory.update',
+#                     'message': f'Total stock updated to {new_total_stock}!',
+#                 }
+#             )
+
+#             return JsonResponse({'message': 'Product inventory updated successfully!'})
+#         else:
+#             return JsonResponse({'error': 'Invalid request payload.'}, status=400)
+
+#     return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+
 
 # Create your views here.
 
+
+class RFIDDataView(APIView):
+    def post(self, request, format=None):
+        serializer = RFIDDataSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 # stock/views.py
 
 class ProductInventoryUpdateAPIView(APIView):
@@ -54,3 +112,18 @@ class ProductListAPIView(generics.ListAPIView):
 #     def perform_update(self, serializer):
 #         instance = serializer.save()
 
+
+
+# Views
+def index(request):
+
+    inventory = ProductInventory.objects.all().order_by('-updated_at')
+
+    context = {
+        'inventory': inventory,
+    }
+
+    if request.htmx:
+        return render(request, 'stock/partials/data-partial.html', context)
+
+    return render(request, 'stock/index.html', context)

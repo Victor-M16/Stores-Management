@@ -51,7 +51,8 @@ while True:
         packet = serialInst.readline()
         packet = packet.decode('utf-8').strip()
         print(packet)
-        # req = requests.get()
+        req = requests.get('http://127.0.0.1:8000/stock/product-inventory/')
+        print(req)
         try:
             product = ProductInventory.objects.get(sku=packet)
             print(product)

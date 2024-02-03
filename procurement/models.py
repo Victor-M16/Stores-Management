@@ -35,7 +35,7 @@ class TenderNotice(models.Model):
         return self.title
     
 class RFQ(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null = True)
+    product = models.ForeignKey(ProductInventory, on_delete=models.CASCADE, null = True)
     description = models.TextField()
     quantity = models.IntegerField(default = 0)
     budget = models.FloatField(null=True)
@@ -45,7 +45,7 @@ class RFQ(models.Model):
     is_approved = models.BooleanField(default = False)
     is_active = models.BooleanField(default = False)
 
-
+ 
 class RFQbid(models.Model):
     rfq = models.ForeignKey(RFQ,on_delete=models.CASCADE, null = True)
     bid_amount = models.DecimalField(max_digits=10, decimal_places=2)

@@ -5,22 +5,15 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
+class RFIDData(models.Model):
+    uid = models.CharField(max_length=50)
+
 
 class Product(models.Model):
     """
     Product details table
     """
 
-    web_id = models.CharField(
-        max_length=50,
-        unique=True,
-        null=False,
-        blank=False,
-        editable=False,
-        default=uuid.uuid1(),
-        verbose_name=_("product website ID"),
-        help_text=_("format: required, unique"),
-    )
     name = models.CharField(
         max_length=255,
         unique=False,
@@ -161,35 +154,3 @@ class Stock(models.Model):
     )
 
 
-# class ProductAttributes(models.Model):
-#     # product = models.ForeignKey(
-#     #     ProductInventory,
-#     #     null=False,
-#     #     blank=False,
-#     #     on_delete=models.PROTECT,
-#     #     )
-#     attribute_name = models.CharField(
-#         max_length=255,
-#         null=False,
-#         blank=False,
-#         help_text=_("Product attribute name"),
-#     )
-#     attribute_description = models.CharField(
-#         max_length=255,
-#         null=False,
-#         blank=False,
-#         help_text=_("attribute description")
-#     )
-
-
-# class ProductAttributeValue(models.Model):
-#     attribute = models.ForeignKey(
-#         ProductAttributes,
-#         null=False,
-#         blank=False,
-#     )
-#     value = models.CharField(
-#         max_length=255,
-#         null=False,
-#         help_text=_("value of attribute")
-#     )

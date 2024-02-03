@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # 'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,18 +41,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # third party apps
+    'channels',
     'simple_history',
     'rest_framework',
     'drf_spectacular',
     'crispy_forms',
-
-
+    'tailwind',
+    'theme',
+    'django_browser_reload',
+    "django_htmx",
 
     # local apps
     'stock',
     'procurement',
     'api',
+
 ]
+
+TAILWIND_APP_NAME = 'theme'
 
 
 MIDDLEWARE = [
@@ -64,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -85,6 +94,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+# ASGI_APPLICATION = "core.asgi.application"
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 
 # Database

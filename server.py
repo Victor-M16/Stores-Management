@@ -94,7 +94,7 @@ def auto_rfq(rfid,product_to_rfq):
 
     rfq_optimum_order_quantity = rfq_metrics[rfid]['Optimal Order Quantity']
     rfq_budget = rfq_metrics[rfid]['Total Cost']
-    rfq_saftey_stock = rfq_metrics[rfid]['Safty Stock']
+    rfq_saftey_stock = rfq_metrics[rfid]['Safety Stock']
 
     try:
         product_to_rfq = ProductInventory.objects.get(sku=rfid)
@@ -108,23 +108,23 @@ def auto_rfq(rfid,product_to_rfq):
             
         }
 
-        
 
         rfq_set = RFQ.objects.all()
 
         # Assuming 'rfid', 'product_to_rfq', 'stock_to_rfq', and 'rfq_metrics' are defined elsewhere
         if rfid == product_to_rfq.sku and stock_to_rfq.total_stock <= rfq_metrics[rfid]['Reorder Point']:
             # Check if an RFQ for the same product doesn't already exist
-            if not any(i.product == product_to_rfq.product for i in rfq_set):
+            if not any(i.product == product_to_rfq for i in rfq_set):
                 # Create an RFQ
                 rfq = RFQ.objects.create(
-                    product=product_to_rfq.product,
+                    product=product_to_rfq,
                     description='[RFQ Description]',
                     quantity=rfq_metrics[rfid]['Optimal Order Quantity'],
                     budget = rfq_metrics[rfid]['Total Cost'],
-                    safety_stock = rfq_metrics[rfid]['Safty Stock'],
+                    safety_stock = rfq_metrics[rfid]['Safety Stock'],
 
                 )
+                print(f"RFQ created for {product_to_rfq}")
 
 
     except:
@@ -132,13 +132,6 @@ def auto_rfq(rfid,product_to_rfq):
         pass
 
     
-
-    # Example queries
-    product_p2_optimal_order_quantity = inventory_metrics['P2']['Optimal Order Quantity']
-    product_p3_total_cost = inventory_metrics['P3']['Total Cost']
-
-    #print(f"Optimal Order Quantity for Product P2: {product_p2_optimal_order_quantity}")
-    #print(f"Total Cost for Product P3: {product_p3_total_cost}")
 
 print(f"Listening on {host}:{port}")
 
@@ -153,53 +146,48 @@ try:
         data = conn.recv(1024)
         if not data:
             break
+        print(f"Received: {data.decode('utf-8')}")
 
+        # Perform querying logic using the received data and existing queryset
+        # For example, if the received data is an ID, filter the queryset
+        # with that ID and do something with the result.
+        # Replace this logic with your specific requirements.
+        # For demonstration purposes, let's assume the data is an ID:
+        received_id = data.decode('utf-8')
+
+
+
+        filtered_product = ProductInventory.objects.get(sku=received_id)
+        print("Scanned Product:", filtered_product)
 
 
         try:
+            # Retrieve or create the associated Stock object
+            filtered_stock, created = Stock.objects.get_or_create(product_inventory=filtered_product)
 
-            print(f"Received: {data.decode('utf-8')}")
+            # Adjust total_stock based on the condition
+            if filtered_stock.total_stock > 100:
+                filtered_stock.total_stock -= 100
+                filtered_stock.save()
+                
+                print("Quantity Out:", 100)
+                print("Stock Left:", filtered_stock.total_stock)
+            else:
+                print(f"Not enough {filtered_product} stock.")
 
-            # Perform querying logic using the received data and existing queryset
-            # For example, if the received data is an ID, filter the queryset
-            # with that ID and do something with the result.
-            # Replace this logic with your specific requirements.
-            # For demonstration purposes, let's assume the data is an ID:
-            received_id = data.decode('utf-8')
-            filtered_product = ProductInventory.objects.get(sku=received_id)
-            print("Filtered Product:", filtered_product)
-
-            try:
-                # Retrieve or create the associated Stock object
-                filtered_stock, created = Stock.objects.get_or_create(product_inventory=filtered_product)
-                print(filtered_stock.total_stock)
-
-                # Adjust total_stock based on the condition
-                if filtered_stock.total_stock > 10:
-                    filtered_stock.total_stock -= 10
-                    filtered_stock.save()
-                else:
-                    print(f"You are out of stock for {filtered_product}.")
-
-                # Save the changes to the Stock object
-                    filtered_stock.save()
+            # Save the changes to the Stock object
+                filtered_stock.save()
 
 
-            except ProductInventory.DoesNotExist:
-                print(f" {filtered_product} not found.")
-            except Stock.DoesNotExist:
-                print(f"Stock not found for {filtered_product}.")
+        except ProductInventory.DoesNotExist:
+            print(f" {filtered_product} not found.")
+        except Stock.DoesNotExist:
+            print(f"Stock not found for {filtered_product}.")
 
 
 
-            #auto_rfq
-            auto_rfq(received_id,filtered_product)
-
-
-        except:
-            print("It worked")
-            pass
-
+        #auto_rfq
+        auto_rfq(received_id,filtered_product)
 
 
 
