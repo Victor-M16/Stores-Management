@@ -17,4 +17,9 @@ urlpatterns = [
     path('open_rfqs/', views.OpenRFQsAPIView.as_view(), name='open_rfqs_api'),
     path('rfq-update/<int:pk>/', views.RFQUpdateAPIView.as_view(), name='rfq-update'),
     path('rfq-single/<int:id>/', views.RFQSingleView.as_view(), name='rfq-single'),
+
+
+    path('inventory_metrics/', views.InventoryMetricsView.as_view(), name='inventory_metrics'),
+    path('product_sku_dict/',views.ProductSkuDictView.as_view(), name='product-sku-dict-view'),
 ]
+

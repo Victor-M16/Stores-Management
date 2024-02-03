@@ -23,8 +23,8 @@ from procurement.models import *
 
 
 #add your django server's port here.
-host, port = '192.168.1.188', 8000 #Wongani
-#host, port = '192.168.1.152', 8000 #Victor
+#host, port = '192.168.1.188', 8000 #Wongani
+host, port = '192.168.1.152', 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host, port))
 s.listen()
@@ -93,6 +93,8 @@ def auto_rfq(rfid,product_to_rfq):
     }
 
     rfq_optimum_order_quantity = rfq_metrics[rfid]['Optimal Order Quantity']
+    rfq_budget = rfq_metrics[rfid]['Total Cost']
+    rfq_saftey_stock = rfq_metrics[rfid]['Safety Stock']
 
     try:
         product_to_rfq = ProductInventory.objects.get(sku=rfid)
@@ -121,6 +123,7 @@ def auto_rfq(rfid,product_to_rfq):
                     budget = rfq_metrics[rfid]['Total Cost'],
                     safety_stock = rfq_metrics[rfid]['Safety Stock'],
                 )
+                print(f"RFQ created for {product_to_rfq}")
 
 
     except:
@@ -128,13 +131,6 @@ def auto_rfq(rfid,product_to_rfq):
         pass
 
     
-
-    # Example queries
-    product_p2_optimal_order_quantity = inventory_metrics['P2']['Optimal Order Quantity']
-    product_p3_total_cost = inventory_metrics['P3']['Total Cost']
-
-    #print(f"Optimal Order Quantity for Product P2: {product_p2_optimal_order_quantity}")
-    #print(f"Total Cost for Product P3: {product_p3_total_cost}")
 
 print(f"Listening on {host}:{port}")
 
@@ -161,20 +157,22 @@ try:
 
 
         filtered_product = ProductInventory.objects.get(sku=received_id)
-        print("Filtered Product:", filtered_product)
+        print("Scanned Product:", filtered_product)
 
 
         try:
             # Retrieve or create the associated Stock object
             filtered_stock, created = Stock.objects.get_or_create(product_inventory=filtered_product)
-            print(filtered_stock.total_stock)
 
             # Adjust total_stock based on the condition
-            if filtered_stock.total_stock > 10:
-                filtered_stock.total_stock -= 10
+            if filtered_stock.total_stock > 100:
+                filtered_stock.total_stock -= 100
                 filtered_stock.save()
+                
+                print("Quantity Out:", 100)
+                print("Stock Left:", filtered_stock.total_stock)
             else:
-                print(f"You are out of stock for {filtered_product}.")
+                print(f"Not enough {filtered_product} stock.")
 
             # Save the changes to the Stock object
                 filtered_stock.save()
