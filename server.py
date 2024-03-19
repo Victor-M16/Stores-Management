@@ -23,8 +23,8 @@ from procurement.models import *
 
 
 #add your django server's port here.
-#host, port = '192.168.1.188', 8000 #Wongani
-host, port = '192.168.1.152', 8000
+host, port = '192.168.1.188', 8000 #Wongani
+#host, port = '192.168.1.152', 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host, port))
 s.listen()
@@ -162,11 +162,12 @@ try:
 
         try:
             # Retrieve or create the associated Stock object
-            filtered_stock, created = Stock.objects.get_or_create(product_inventory=filtered_product)
+            filtered_stock= Stock.objects.get(product_inventory=filtered_product)
 
             # Adjust total_stock based on the condition
             if filtered_stock.total_stock > 100:
                 filtered_stock.total_stock -= 100
+                filtered_stock.units_out += 100
                 filtered_stock.save()
                 
                 print("Quantity Out:", 100)
