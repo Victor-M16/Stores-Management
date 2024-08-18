@@ -117,10 +117,18 @@ class ProductListAPIView(generics.ListAPIView):
 # Views
 def index(request):
 
-    inventory = ProductInventory.objects.all().order_by('-updated_at')
+    inventory = ProductInventory.objects.all().order_by('-updated_at')[:3]
+    reorder_points = ['189.2', '185.8', '136.2']
+    inventory_list = []
+    for product, reorder in zip(inventory, reorder_points):
+        data = {
+            'product': product,
+            'reorder': reorder,
+        }
+        inventory_list.append(data)
 
     context = {
-        'inventory': inventory,
+        'inventory': inventory_list,
     }
 
     if request.htmx:

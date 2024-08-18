@@ -31,4 +31,3 @@ SIPS goes beyond traditional inventory management systems by incorporating IoT f
 We welcome contributions from the community to enhance and improve SIPS. If you have ideas, bug reports, or feature requests, please open an issue or submit a pull request.
 
 Let's build a smarter future with SIPS!
-
